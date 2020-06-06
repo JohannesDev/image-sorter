@@ -65,5 +65,5 @@ def moveFile(sourcePath, destinationPath):
               destinationPath + " already exists. Skipping file.")
 
 
-moveImages("C:/Users/Johannes/Desktop/test/Fortgehn",
-           "C:/Users/Johannes/Desktop/test/Fotos")
+# moveImages("C:/Users/Johannes/Desktop/test/Fortgehn",
+#           "C:/Users/Johannes/Desktop/test/Fotos")
