@@ -52,15 +52,18 @@ def getMonth(sourceFile):
 def creatDir(path):
     if not os.path.exists(path):
         os.mkdir(path)
+    else:
+        print("CREATE ERROR: Path " +
+              path + " already exists.")
 
 
 def moveFile(sourcePath, destinationPath):
     if not os.path.exists(destinationPath):
         shutil.move(sourcePath, destinationPath)
     else:
-        print("Move error: Destination path " +
-              destinationPath + "already exists. Skipping file.")
+        print("MOVE ERROR: Destination path " +
+              destinationPath + " already exists. Skipping file.")
 
 
-# moveImages("C:/Users/Johannes/Desktop/test/Fortgehn",
-#           "C:/Users/Johannes/Desktop/test/Fotos")
+moveImages("C:/Users/Johannes/Desktop/test/Fortgehn",
+           "C:/Users/Johannes/Desktop/test/Fotos")
