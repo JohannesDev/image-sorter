@@ -1,4 +1,5 @@
 # Good resource: https://realpython.com/working-with-files-in-python/
+# https://www.python.org/dev/peps/pep-0471/#specifics-of-proposal
 
 from file import moveImages
 
@@ -46,8 +47,6 @@ tb_DestinationPath.grid(row=1, column=1, columnspan=10)
 Button(root, text='Open', command=getDestinationPath).grid(
     row=1, column=11, sticky=W, pady=5)
 
-#
-#
 # Actions
 Button(root, text='Move Images', command=lambda: moveImages(sourcePath.get(), destinationPath.get())).grid(
     row=3, column=10, sticky=W, pady=10)
