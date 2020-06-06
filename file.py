@@ -1,6 +1,6 @@
-from os import walk, path
-from datetime import datetime
-from time import time
+import os
+import datetime
+import time
 
 
 def moveImages(sourcePath, destinationPath):
@@ -10,19 +10,17 @@ def moveImages(sourcePath, destinationPath):
     folders = []
     files = []
 
-    for (dirpath, dirnames, filenames) in walk(destinationPath):
-        folders.extend(dirpath)
-        break
+    for entry in os.scandir(sourcePath):
+        if(entry.is_file()):
+            files.append(entry)
 
-    for (dirpath, dirnames, filenames) in walk(sourcePath):
-        for filename in filenames:
-            files.append(dirpath + "/" + filename)
-
-        break
-
-    for onefile in files:
-        print(onefile + ":" + str(formatTime(path.getctime(onefile))))
+    for mfile in files:
+        print(getLastModified(mfile))
 
 
-def formatTime(ctime):
-    return datetime.strptime(ctime, "%a %b %d %H:%M:%S %Y")
+def getLastModified(mfile):
+    return datetime.utcfromtimestamp(mfile.stat().st_mtime)
+
+
+moveImages("C:/Users/Johannes/Desktop/test/Fortgehn",
+           "C:/Users/Johannes/Desktop/test/Fotos")

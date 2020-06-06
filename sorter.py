@@ -1,3 +1,5 @@
+# Good resource: https://realpython.com/working-with-files-in-python/
+
 from file import moveImages
 
 from tkinter import *
@@ -25,6 +27,7 @@ Label(root, text="Source Path").grid(
     row=0, column=0, sticky=E)
 
 sourcePath = StringVar()
+sourcePath.set("C:/Users/Johannes/Desktop/test/Fortgehn")
 tb_SourcePath = Entry(root, textvariable=sourcePath, width=70)
 tb_SourcePath.grid(row=0, column=1, columnspan=10)
 
@@ -36,6 +39,7 @@ Label(root, text="Destination Path").grid(
     row=1, column=0, sticky=E)
 
 destinationPath = StringVar()
+destinationPath.set("C:/Users/Johannes/Desktop/test/Fotos")
 tb_DestinationPath = Entry(root, textvariable=destinationPath, width=70)
 tb_DestinationPath.grid(row=1, column=1, columnspan=10)
 
@@ -45,11 +49,7 @@ Button(root, text='Open', command=getDestinationPath).grid(
 #
 #
 # Actions
-Button(root, text='Create Folder Structure').grid(
-    row=3, column=0, sticky=W, pady=10)
 Button(root, text='Move Images', command=lambda: moveImages(sourcePath.get(), destinationPath.get())).grid(
     row=3, column=10, sticky=W, pady=10)
-Button(root, text='Verify Folders', command=getDestinationPath).grid(
-    row=3, column=11, sticky=W, pady=10)
 
 root.mainloop()
