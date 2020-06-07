@@ -2,6 +2,17 @@ import os
 import shutil
 from datetime import datetime
 import time
+import json
+
+# LastSourcePath and LastDestinationPath
+configPath = "imageSorter.json"
+
+
+class ConfigKeys:
+    LastSourcePath = "LastSourcePath"
+    LastDestinationPath = "LastDestinationPath"
+    All = "All"
+
 
 monthNames = {
     1: "01_Jänner",
@@ -39,6 +50,30 @@ def moveImages(sourcePath, destinationPath):
                      monthName + '/' + sourceFile.name)
 
 
+def loadConfig(key):
+    config = {ConfigKeys.LastSourcePath: "C:/",
+              ConfigKeys.LastDestinationPath: "D:/"}
+
+    if os.path.exists(configPath):
+        config = json.load(open(configPath))
+
+    if key != ConfigKeys.All:
+        return config.get(key)
+    else:
+        return config
+
+
+def saveConfig(key, data):
+    config = loadConfig(ConfigKeys.All)
+
+    if key != ConfigKeys.All:
+        config[key] = data
+    else:
+        config = data
+
+    json.dump(config, open(configPath, 'w'))
+
+
 def getYear(sourceFile):
     fileTime = sourceFile.stat().st_mtime
     return str(datetime.utcfromtimestamp(fileTime).year)
@@ -65,5 +100,5 @@ def moveFile(sourcePath, destinationPath):
               destinationPath + " already exists. Skipping file.")
 
 
-# moveImages("C:/Users/Johannes/Desktop/test/Fortgehn",
-#           "C:/Users/Johannes/Desktop/test/Fotos")
+# moveImages("C:/",
+#           "D:/")

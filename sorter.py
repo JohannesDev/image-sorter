@@ -1,7 +1,7 @@
 # Good resource: https://realpython.com/working-with-files-in-python/
 # https://www.python.org/dev/peps/pep-0471/#specifics-of-proposal
 
-from file import moveImages
+from fileHelper import moveImages, ConfigKeys, loadConfig, saveConfig
 
 from tkinter import *
 from tkinter.filedialog import askdirectory
@@ -13,11 +13,13 @@ destinationPath: StringVar
 # callbacks
 def getSourcePath():
     path = askdirectory()
+    saveConfig(ConfigKeys.LastSourcePath, path)
     sourcePath.set(path)
 
 
 def getDestinationPath():
     path = askdirectory()
+    saveConfig(ConfigKeys.LastDestinationPath, path)
     destinationPath.set(path)
 
 
@@ -28,7 +30,7 @@ Label(root, text="Source Path").grid(
     row=0, column=0, sticky=E)
 
 sourcePath = StringVar()
-sourcePath.set("C:/Users/Johannes/Desktop/test/Fortgehn")
+sourcePath.set(loadConfig(ConfigKeys.LastSourcePath))
 tb_SourcePath = Entry(root, textvariable=sourcePath, width=70)
 tb_SourcePath.grid(row=0, column=1, columnspan=10)
 
@@ -40,7 +42,7 @@ Label(root, text="Destination Path").grid(
     row=1, column=0, sticky=E)
 
 destinationPath = StringVar()
-destinationPath.set("C:/Users/Johannes/Desktop/test/Fotos")
+destinationPath.set(loadConfig(ConfigKeys.LastDestinationPath))
 tb_DestinationPath = Entry(root, textvariable=destinationPath, width=70)
 tb_DestinationPath.grid(row=1, column=1, columnspan=10)
 
