@@ -5,7 +5,7 @@ import time
 import json
 
 # LastSourcePath and LastDestinationPath
-configPath = "imageSorter.json"
+configPath = "config.json"
 
 
 class ConfigKeys:
