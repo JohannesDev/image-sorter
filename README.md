@@ -1,5 +1,5 @@
 # image-sorter
-Define Source and destination path and click 'Move Images'. Please
+Define Source and destination path and click 'Move Images'. Please note that this software is highly unstable and still under heavy development.
 The result looks somewhat like this:
 ```
 .
