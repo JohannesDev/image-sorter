@@ -4,9 +4,6 @@ from datetime import datetime
 import time
 import json
 
-# LastSourcePath and LastDestinationPath
-configPath = "config.json"
-
 
 class ConfigKeys:
     LastSourcePath = "LastSourcePath"
@@ -14,91 +11,85 @@ class ConfigKeys:
     All = "All"
 
 
-monthNames = {
-    1: "01_Jänner",
-    2: "02_Februar",
-    3: "03_März",
-    4: "04_April",
-    5: "05_Mai",
-    6: "06_Juni",
-    7: "07_Juli",
-    8: "08_August",
-    9: "09_September",
-    10: "10_Oktober",
-    11: "11_November",
-    12: "12_Dezember",
-}
+class FileHelper():
+    def __init__(self):
+        # LastSourcePath and LastDestinationPath
+        self.configPath = "config.json"
 
+        self.monthNames = {
+            1: "01_Jänner",
+            2: "02_Februar",
+            3: "03_März",
+            4: "04_April",
+            5: "05_Mai",
+            6: "06_Juni",
+            7: "07_Juli",
+            8: "08_August",
+            9: "09_September",
+            10: "10_Oktober",
+            11: "11_November",
+            12: "12_Dezember",
+        }
 
-def moveImages(sourcePath, destinationPath):
-    # print(sourcePath)
-    # print(destinationPath)
+    def moveImages(self, sourcePath, destinationPath):
+        # print(sourcePath)
+        # print(destinationPath)
 
-    for sourceFile in os.scandir(sourcePath):
-        if(sourceFile.is_file()):
-            # create year folder if it doesn't exist
-            year = getYear(sourceFile)
-            creatDir(destinationPath + '/' + year)
+        for sourceFile in os.scandir(sourcePath):
+            if(sourceFile.is_file()):
+                # create year folder if it doesn't exist
+                year = getYear(sourceFile)
+                creatDir(destinationPath + '/' + year)
 
-            # create month folder if it doesn't exist
-            month = getMonth(sourceFile)
-            monthName = monthNames.get(month)
-            creatDir(destinationPath + '/' + year + '/' + monthName)
+                # create month folder if it doesn't exist
+                month = getMonth(sourceFile)
+                monthName = self.monthNames.get(month)
+                creatDir(destinationPath + '/' + year + '/' + monthName)
 
-            # move file to folder
-            moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
-                     monthName + '/' + sourceFile.name)
+                # move file to folder
+                moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
+                         monthName + '/' + sourceFile.name)
 
+    def loadConfig(self, key):
+        config = {ConfigKeys.LastSourcePath: "C:/",
+                  ConfigKeys.LastDestinationPath: "D:/"}
 
-def loadConfig(key):
-    config = {ConfigKeys.LastSourcePath: "C:/",
-              ConfigKeys.LastDestinationPath: "D:/"}
+        if os.path.exists(self.configPath):
+            config = json.load(open(self.configPath))
 
-    if os.path.exists(configPath):
-        config = json.load(open(configPath))
+        if key != ConfigKeys.All:
+            return config.get(key)
+        else:
+            return config
 
-    if key != ConfigKeys.All:
-        return config.get(key)
-    else:
-        return config
+    def saveConfig(self, key, data):
+        config = self.loadConfig(ConfigKeys.All)
 
+        if key != ConfigKeys.All:
+            config[key] = data
+        else:
+            config = data
 
-def saveConfig(key, data):
-    config = loadConfig(ConfigKeys.All)
+        json.dump(config, open(self.configPath, 'w'))
 
-    if key != ConfigKeys.All:
-        config[key] = data
-    else:
-        config = data
+    def getYear(self, sourceFile):
+        fileTime = sourceFile.stat().st_mtime
+        return str(datetime.utcfromtimestamp(fileTime).year)
 
-    json.dump(config, open(configPath, 'w'))
+    def getMonth(self, sourceFile):
+        fileTime = sourceFile.stat().st_mtime
+        return datetime.utcfromtimestamp(fileTime).month
 
+    def creatDir(self, path):
+        if not os.path.exists(path):
+            os.mkdir(path)
+        else:
+            print("CREATE ERROR: Path " +
+                  path + " already exists.")
 
-def getYear(sourceFile):
-    fileTime = sourceFile.stat().st_mtime
-    return str(datetime.utcfromtimestamp(fileTime).year)
-
-
-def getMonth(sourceFile):
-    fileTime = sourceFile.stat().st_mtime
-    return datetime.utcfromtimestamp(fileTime).month
-
-
-def creatDir(path):
-    if not os.path.exists(path):
-        os.mkdir(path)
-    else:
-        print("CREATE ERROR: Path " +
-              path + " already exists.")
-
-
-def moveFile(sourcePath, destinationPath):
-    if not os.path.exists(destinationPath):
-        shutil.move(sourcePath, destinationPath)
-    else:
-        print("MOVE ERROR: Destination path " +
-              destinationPath + " already exists. Skipping file.")
-
-
-# moveImages("C:/",
-#           "D:/")
+    def moveFile(self, sourcePath, destinationPath):
+        if not os.path.exists(destinationPath):
+            shutil.move(sourcePath, destinationPath)
+        else:
+            print("MOVE ERROR: Destination path " +
+                  destinationPath + " already exists. Skipping file.")
