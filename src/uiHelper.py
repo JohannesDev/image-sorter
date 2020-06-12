@@ -22,8 +22,7 @@ class UiHelper():
     def setupUI(self):
         root = self.root
         # SourcePath
-        Label(root, text="Source Path").grid(
-            row=0, column=0, sticky=E)
+        Label(root, text="Source Path").grid(row=0, column=0, sticky=E)
 
         tb_SourcePath = Entry(root, textvariable=self.sourcePath, width=70)
         tb_SourcePath.grid(row=0, column=1, columnspan=10)

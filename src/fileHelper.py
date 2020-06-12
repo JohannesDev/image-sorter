@@ -31,24 +31,33 @@ class FileHelper():
             12: "12_Dezember",
         }
 
-    def moveImages(self, sourcePath, destinationPath):
-        # print(sourcePath)
-        # print(destinationPath)
+    # private
 
+    def __getYear(self, sourceFile):
+        fileTime = sourceFile.stat().st_mtime
+        return str(datetime.utcfromtimestamp(fileTime).year)
+
+    def __getMonth(self, sourceFile):
+        fileTime = sourceFile.stat().st_mtime
+        return datetime.utcfromtimestamp(fileTime).month
+
+    # public
+
+    def moveImages(self, sourcePath, destinationPath):
         for sourceFile in os.scandir(sourcePath):
             if(sourceFile.is_file()):
                 # create year folder if it doesn't exist
-                year = getYear(sourceFile)
-                creatDir(destinationPath + '/' + year)
+                year = self.__getYear(sourceFile)
+                self.creatDir(destinationPath + '/' + year)
 
                 # create month folder if it doesn't exist
-                month = getMonth(sourceFile)
+                month = self.__getMonth(sourceFile)
                 monthName = self.monthNames.get(month)
-                creatDir(destinationPath + '/' + year + '/' + monthName)
+                self.creatDir(destinationPath + '/' + year + '/' + monthName)
 
                 # move file to folder
-                moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
-                         monthName + '/' + sourceFile.name)
+                self.moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
+                              monthName + '/' + sourceFile.name)
 
     def loadConfig(self, key):
         config = {ConfigKeys.LastSourcePath: "C:/",
@@ -71,14 +80,6 @@ class FileHelper():
             config = data
 
         json.dump(config, open(self.configPath, 'w'))
-
-    def getYear(self, sourceFile):
-        fileTime = sourceFile.stat().st_mtime
-        return str(datetime.utcfromtimestamp(fileTime).year)
-
-    def getMonth(self, sourceFile):
-        fileTime = sourceFile.stat().st_mtime
-        return datetime.utcfromtimestamp(fileTime).month
 
     def creatDir(self, path):
         if not os.path.exists(path):
