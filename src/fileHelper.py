@@ -59,6 +59,13 @@ class FileHelper():
                 self.moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
                               monthName + '/' + sourceFile.name)
 
+    def extractImages(self, sourcePath, destinationPath):
+        for sourceFile in os.scandir(sourcePath):
+            if(sourceFile.is_file()):
+                # move file to folder
+                self.moveFile(sourceFile.path, destinationPath +
+                              '/' + sourceFile.name)
+
     def loadConfig(self, key):
         config = {ConfigKeys.LastSourcePath: "C:/",
                   ConfigKeys.LastDestinationPath: "D:/"}
