@@ -1,3 +1,6 @@
+# Good resource: https://realpython.com/working-with-files-in-python/
+# https://www.python.org/dev/peps/pep-0471/#specifics-of-proposal
+
 import os
 import shutil
 from datetime import datetime
@@ -60,11 +63,14 @@ class FileHelper():
                               monthName + '/' + sourceFile.name)
 
     def extractImages(self, sourcePath, destinationPath):
-        for sourceFile in os.scandir(sourcePath):
-            if(sourceFile.is_file()):
+        for rootPath, dirNames, fileNames in os.walk(sourcePath):
+            for fileName in fileNames:
                 # move file to folder
-                self.moveFile(sourceFile.path, destinationPath +
-                              '/' + sourceFile.name)
+                self.moveFile(os.path.join(rootPath, fileName),
+                              os.path.join(destinationPath, fileName))
+
+            for dirName in dirNames:
+                print("Delete" + os.path.join(rootPath, dirName))
 
     def loadConfig(self, key):
         config = {ConfigKeys.LastSourcePath: "C:/",
