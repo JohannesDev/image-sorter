@@ -1,6 +1,5 @@
 from fileHelper import FileHelper, ConfigKeys
 from tkinter import *
-from tkinter.filedialog import askdirectory
 
 
 class UiHelper():
@@ -15,7 +14,6 @@ class UiHelper():
         # propetries
         self.__sourcePath = StringVar()
         self.__destinationPath = StringVar()
-        self.logBox = Text(self.root)
 
         self.fileHelper = fileHelper
 
@@ -44,48 +42,19 @@ class UiHelper():
             self.root, textvariable=self.destinationPath, width=80)
         tb_DestinationPath.grid(row=1, column=1, columnspan=9)
 
-    def addOpenButtons(self):
-        Button(self.root, text='Open', command=self.onClickBrowseSourcePath).grid(
-            row=0, column=10, sticky=W, pady=5)
-        Button(self.root, text='Open', command=self.onClickBrowseDestinationPath).grid(
-            row=1, column=10, sticky=W, pady=5)
-
     def addLabel(self, text, row, column):
         Label(self.root, text=text).grid(row=row, column=column, sticky=E)
 
     def addButton(self, text, row, column, command):
-        Button(self.root, text=text, command=lambda: [command(), print("donee")]).grid(
+        Button(self.root, text=text, command=lambda: [command(), print(command.__name__)]).grid(
             row=row,  column=column, sticky=W, pady=10)
 
-    def addLogBox(self):
-        self.logBox.grid(row=4, column=0, columnspan=12)
-        self.logBox.configure(state="disabled")
+    def addLogBox(self, logBox):
+        logBox.grid(row=4, column=0, columnspan=12)
+        # self.logBox.configure(state="disabled")
+
+    def log(self, message):
+        self.logBox.insert(INSERT, message + '\n')
 
     def build(self):
         self.root.mainloop()
-
-    # ------------------------
-    # ------------------------
-    # ------------------------
-    # ------------------------
-    # helper
-
-    def switchPaths(self):
-        helper = self.sourcePath.get()
-        self.fileHelper.saveConfig(
-            ConfigKeys.LastSourcePath, self.destinationPath.get())
-        self.sourcePath.set(self.destinationPath.get())
-
-        self.destinationPath.set(helper)
-        self.fileHelper.saveConfig(
-            ConfigKeys.LastDestinationPath, helper)
-
-    def onClickBrowseSourcePath(self):
-        path = askdirectory()
-        self.fileHelper.saveConfig(ConfigKeys.LastSourcePath, path)
-        self.sourcePath.set(path)
-
-    def onClickBrowseDestinationPath(self):
-        path = askdirectory()
-        self.fileHelper.saveConfig(ConfigKeys.LastDestinationPath, path)
-        self.destinationPath.set(path)
