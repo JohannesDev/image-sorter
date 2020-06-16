@@ -44,33 +44,65 @@ class FileHelper():
         fileTime = sourceFile.stat().st_mtime
         return datetime.utcfromtimestamp(fileTime).month
 
-    # public
+    def __creatDir(self, path):
+        if not os.path.exists(path):
+            os.mkdir(path)
+        else:
+            print("CREATE ERROR: Path " +
+                  path + " already exists.")
 
+    def __deleteDir(self, path):
+        if os.path.exists(path):
+            try:
+                os.rmdir(path)
+                print("Deleted" + path)
+                return True
+            except OSError as e:
+                print(f'Error: {path} : {e.strerror}')
+                return False
+        else:
+            print("DELETE ERROR: Path " +
+                  path + " does not exists.")
+
+    def __moveFile(self, sourcePath, destinationPath):
+        if not os.path.exists(destinationPath):
+            shutil.move(sourcePath, destinationPath)
+        else:
+            print("MOVE ERROR: Destination path " +
+                  destinationPath + " already exists. Skipping file.")
+
+    # public
     def moveImages(self, sourcePath, destinationPath):
         for sourceFile in os.scandir(sourcePath):
             if(sourceFile.is_file()):
                 # create year folder if it doesn't exist
                 year = self.__getYear(sourceFile)
-                self.creatDir(destinationPath + '/' + year)
+                self.__creatDir(destinationPath + '/' + year)
 
                 # create month folder if it doesn't exist
                 month = self.__getMonth(sourceFile)
                 monthName = self.monthNames.get(month)
-                self.creatDir(destinationPath + '/' + year + '/' + monthName)
+                self.__creatDir(destinationPath + '/' + year + '/' + monthName)
 
                 # move file to folder
-                self.moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
-                              monthName + '/' + sourceFile.name)
+                self.__moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
+                                monthName + '/' + sourceFile.name)
 
     def extractImages(self, sourcePath, destinationPath):
+        folderPaths = []
+
         for rootPath, dirNames, fileNames in os.walk(sourcePath):
             for fileName in fileNames:
                 # move file to folder
-                self.moveFile(os.path.join(rootPath, fileName),
-                              os.path.join(destinationPath, fileName))
+                self.__moveFile(os.path.join(rootPath, fileName),
+                                os.path.join(destinationPath, fileName))
 
             for dirName in dirNames:
-                print("Delete" + os.path.join(rootPath, dirName))
+                folderPaths.append(os.path.join(rootPath, dirName))
+
+        for folderPath in folderPaths:
+            print(folderPath)
+            self.__deleteDir(folderPath)
 
     def loadConfig(self, key):
         config = {ConfigKeys.LastSourcePath: "C:/",
@@ -93,17 +125,3 @@ class FileHelper():
             config = data
 
         json.dump(config, open(self.configPath, 'w'))
-
-    def creatDir(self, path):
-        if not os.path.exists(path):
-            os.mkdir(path)
-        else:
-            print("CREATE ERROR: Path " +
-                  path + " already exists.")
-
-    def moveFile(self, sourcePath, destinationPath):
-        if not os.path.exists(destinationPath):
-            shutil.move(sourcePath, destinationPath)
-        else:
-            print("MOVE ERROR: Destination path " +
-                  destinationPath + " already exists. Skipping file.")
