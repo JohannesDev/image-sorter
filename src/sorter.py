@@ -19,8 +19,7 @@ def openDestinationPath():
 def switchPaths():
     helper = uiHelper.sourcePath.get()
 
-    fileHelper.saveConfig(ConfigKeys.LastSourcePath,
-                          uiHelper.destinationPath.get())
+    fileHelper.saveConfig(ConfigKeys.LastSourcePath, uiHelper.destinationPath.get())
     uiHelper.sourcePath.set(uiHelper.destinationPath.get())
 
     uiHelper.destinationPath.set(helper)
@@ -41,17 +40,28 @@ uiHelper.destinationPath = destinationPath
 uiHelper.addLabel("Source Path", row=0, column=0)
 uiHelper.addLabel("Destination Path", row=1, column=0)
 uiHelper.addTextBoxes()
-uiHelper.addButton('Open', row=0, column=10, command=openSourcePath)
-uiHelper.addButton('Open', row=1, column=10, command=openDestinationPath)
+uiHelper.addButton("Open", row=0, column=10, command=openSourcePath)
+uiHelper.addButton("Open", row=1, column=10, command=openDestinationPath)
 
 
-uiHelper.addButton('Switch Paths', row=0, column=11,
-                   command=switchPaths)
+uiHelper.addButton("Switch Paths", row=0, column=11, command=switchPaths)
 
-uiHelper.addButton('Move Images', row=3, column=10,
-                   command=lambda: fileHelper.moveImages(uiHelper.sourcePath.get(), uiHelper.destinationPath.get()))
+uiHelper.addButton(
+    "Move Images",
+    row=3,
+    column=10,
+    command=lambda: fileHelper.moveImages(
+        uiHelper.sourcePath.get(), uiHelper.destinationPath.get()
+    ),
+)
 
-uiHelper.addButton('Extract Images', row=3, column=1,
-                   command=lambda: fileHelper.extractImages(uiHelper.sourcePath.get(), uiHelper.destinationPath.get()))
+uiHelper.addButton(
+    "Extract Images",
+    row=3,
+    column=1,
+    command=lambda: fileHelper.extractImages(
+        uiHelper.sourcePath.get(), uiHelper.destinationPath.get()
+    ),
+)
 
 uiHelper.build()

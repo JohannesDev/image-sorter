@@ -14,7 +14,7 @@ class ConfigKeys:
     All = "All"
 
 
-class FileHelper():
+class FileHelper:
     def __init__(self):
         # LastSourcePath and LastDestinationPath
         self.configPath = "config.json"
@@ -48,8 +48,7 @@ class FileHelper():
         if not os.path.exists(path):
             os.mkdir(path)
         else:
-            print("CREATE ERROR: Path " +
-                  path + " already exists.")
+            print("CREATE ERROR: Path " + path + " already exists.")
 
     def __deleteDir(self, path):
         if os.path.exists(path):
@@ -58,35 +57,45 @@ class FileHelper():
                 print("Deleted" + path)
                 return True
             except OSError as e:
-                print(f'Error: {path} : {e.strerror}')
+                print(f"Error: {path} : {e.strerror}")
                 return False
         else:
-            print("DELETE ERROR: Path " +
-                  path + " does not exists.")
+            print("DELETE ERROR: Path " + path + " does not exists.")
 
     def __moveFile(self, sourcePath, destinationPath):
         if not os.path.exists(destinationPath):
             shutil.move(sourcePath, destinationPath)
         else:
-            print("MOVE ERROR: Destination path " +
-                  destinationPath + " already exists. Skipping file.")
+            print(
+                "MOVE ERROR: Destination path "
+                + destinationPath
+                + " already exists. Skipping file."
+            )
 
     # public
     def moveImages(self, sourcePath, destinationPath):
         for sourceFile in os.scandir(sourcePath):
-            if(sourceFile.is_file()):
+            if sourceFile.is_file():
                 # create year folder if it doesn't exist
                 year = self.__getYear(sourceFile)
-                self.__creatDir(destinationPath + '/' + year)
+                self.__creatDir(destinationPath + "/" + year)
 
                 # create month folder if it doesn't exist
                 month = self.__getMonth(sourceFile)
                 monthName = self.monthNames.get(month)
-                self.__creatDir(destinationPath + '/' + year + '/' + monthName)
+                self.__creatDir(destinationPath + "/" + year + "/" + monthName)
 
                 # move file to folder
-                self.__moveFile(sourceFile.path, destinationPath + '/' + year + '/' +
-                                monthName + '/' + sourceFile.name)
+                self.__moveFile(
+                    sourceFile.path,
+                    destinationPath
+                    + "/"
+                    + year
+                    + "/"
+                    + monthName
+                    + "/"
+                    + sourceFile.name,
+                )
 
     def extractImages(self, sourcePath, destinationPath):
         folderPaths = []
@@ -94,8 +103,10 @@ class FileHelper():
         for rootPath, dirNames, fileNames in os.walk(sourcePath):
             for fileName in fileNames:
                 # move file to folder
-                self.__moveFile(os.path.join(rootPath, fileName),
-                                os.path.join(destinationPath, fileName))
+                self.__moveFile(
+                    os.path.join(rootPath, fileName),
+                    os.path.join(destinationPath, fileName),
+                )
 
             for dirName in dirNames:
                 folderPaths.append(os.path.join(rootPath, dirName))
@@ -105,8 +116,10 @@ class FileHelper():
             self.__deleteDir(folderPath)
 
     def loadConfig(self, key):
-        config = {ConfigKeys.LastSourcePath: "C:/",
-                  ConfigKeys.LastDestinationPath: "D:/"}
+        config = {
+            ConfigKeys.LastSourcePath: "C:/",
+            ConfigKeys.LastDestinationPath: "D:/",
+        }
 
         if os.path.exists(self.configPath):
             config = json.load(open(self.configPath))
@@ -124,4 +137,4 @@ class FileHelper():
         else:
             config = data
 
-        json.dump(config, open(self.configPath, 'w'))
+        json.dump(config, open(self.configPath, "w"))
